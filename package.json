@@ -20,5 +20,8 @@
   "bugs": {
     "url": "https://github.com/rish-0-0/swiss-ephemeris-javascript/issues"
   },
-  "homepage": "https://github.com/rish-0-0/swiss-ephemeris-javascript#readme"
+  "homepage": "https://github.com/rish-0-0/swiss-ephemeris-javascript#readme",
+  "dependencies": {
+    "swisseph": "^0.5.14"
+  }
 }
