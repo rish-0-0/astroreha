@@ -4,12 +4,22 @@
   Swiss Ephemeris: 0.001 arcsec (requires 90MB of data)
   JPL NASA: almost accurate (nothing higher than this): 2.9GB of Data
 
-  Lol, we don't need no data
 
 */
-
-const { getUTCPosition } = require("./position");
+const positioner = require("./position");
+const { getUTCPosition, getUTCFixedStarPosition, getAllPlanets } = positioner;
 
 if (require.main == module) {
-  console.log(getUTCPosition("moon", new Date()));
+  // console.log(getUTCPosition("moon", new Date()));
+  // console.log(getUTCFixedStarPosition("Aldebaran", new Date()));
+  console.log(
+    getAllPlanets(
+      new Date("2015-08-10T17:09:01.000+08:00").toDateString(),
+      10.0014,
+      53.5653,
+      0
+    )
+  );
 }
+
+module.exports = positioner;

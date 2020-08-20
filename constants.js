@@ -1,4 +1,6 @@
 const swisseph = require('swisseph');
+swisseph.swe_set_ephe_path('./node_modules/swisseph/ephe');
+
 
 module.exports.FLAG = swisseph.SEFLG_SPEED | swisseph.SEFLG_MOSEPH;
 
@@ -11,3 +13,5 @@ module.exports.DICT = {
   oscu_apog: swisseph.SE_OSCU_APOG,
   chiron: swisseph.SE_CHIRON,
 }
+
+module.exports.swisseph = swisseph;
