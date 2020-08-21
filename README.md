@@ -1,5 +1,9 @@
 # Reha Astrology
 
+```shell
+npm i -S astroreha
+```
+
 1. Default House System: `Whole Sign`
 2. Default Ayanamsha Used: `Lahiri`
 
