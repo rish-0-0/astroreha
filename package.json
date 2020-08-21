@@ -1,5 +1,5 @@
 {
-  "name": "astro-data-retrieval-clean",
+  "name": "reha-astro",
   "version": "1.0.0",
   "description": "Swiss Ephemeris Data Retreival Unit",
   "main": "index.js",
@@ -23,6 +23,7 @@
   "homepage": "https://github.com/rish-0-0/swiss-ephemeris-javascript#readme",
   "dependencies": {
     "ephemeris": "^2.0.0",
+    "jyotish": "^1.0.1",
     "swisseph": "^0.5.14"
   }
 }

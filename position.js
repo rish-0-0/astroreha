@@ -1,5 +1,7 @@
 const { swisseph, ...constants } = require("./constants");
 const ephemeris = require("ephemeris");
+const jyotish = require("jyotish");
+const { calculateHouses } = require("./houses");
 
 /**
  *
@@ -52,9 +54,30 @@ function getAllPlanets(dateString, longitude, latitude, height) {
   );
 }
 
+/*
+  Grahas: Sun, Moon, Mercury, Venus, Mars, Jupiter, Saturn, Rahu
+  Ayanamsha in use is Lahiri (most common)
+*/
+
+/**
+ * @param {String} dateString format YYYY-MM-DD
+ * @param {String} timeString format HH:MM:SS
+ * @param {Number} lat latitude
+ * @param {Number} lng longitude
+ * @param {Number} timezone timezone in hours
+ */
+function getAllGrahas(dateString, timeString, lat, lng, timezone) {
+  console.log(calculateHouses({ dateString, timeString, lat, lng, timezone }));
+  return jyotish.grahas.getGrahasPosition(
+    { dateString, timeString, lat, lng, timezone },
+    { zodiacType: "S", houseType: "W" }
+  );
+}
+
 module.exports = {
   getUTCPosition,
   getJulianDay,
   getUTCFixedStarPosition,
   getAllPlanets,
+  getAllGrahas,
 };
