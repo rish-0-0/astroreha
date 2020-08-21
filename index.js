@@ -26,7 +26,7 @@ if (require.main == module) {
   //   )
   // );
 
-  console.log(getBirthChart("1990-07-04", "10:12:00", 29.7604, -95.3698, -5)); // Sophie
+  // console.log(getBirthChart("1990-07-04", "10:12:00", 29.7604, -95.3698, -5)); // Sophie
   // console.log(getBirthChart("1999-05-22", "08:00:00", 28.6139, 77.209, 5.5)); // Rishabh
 }
 

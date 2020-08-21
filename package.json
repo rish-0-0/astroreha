@@ -1,26 +1,30 @@
 {
-  "name": "reha-astro",
+  "name": "astroreha",
   "version": "1.0.0",
-  "description": "Swiss Ephemeris Data Retreival Unit",
+  "description": "Astrology Library to get Birth Chart and Navamsa Chart. Compatibility retrieval using the same.",
   "main": "index.js",
   "scripts": {
     "test": "node index.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/rish-0-0/swiss-ephemeris-javascript.git"
+    "url": "git+https://github.com/rish-0-0/astroreha.git"
   },
   "keywords": [
     "Swiss",
     "Ephemeris",
-    "Astrology"
+    "Astrology",
+    "Jyotish",
+    "Birth Chart",
+    "Navamsa Chart",
+    "Reha"
   ],
   "author": "Rishabh Anand",
   "license": "GPL-2.0",
   "bugs": {
-    "url": "https://github.com/rish-0-0/swiss-ephemeris-javascript/issues"
+    "url": "https://github.com/rish-0-0/astroreha/issues"
   },
-  "homepage": "https://github.com/rish-0-0/swiss-ephemeris-javascript#readme",
+  "homepage": "https://github.com/rish-0-0/astroreha#readme",
   "dependencies": {
     "ephemeris": "^2.0.0",
     "jyotish": "^1.0.1",
