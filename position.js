@@ -66,12 +66,62 @@ function getAllPlanets(dateString, longitude, latitude, height) {
  * @param {Number} lng longitude
  * @param {Number} timezone timezone in hours
  */
-function getAllGrahas(dateString, timeString, lat, lng, timezone) {
-  console.log(calculateHouses({ dateString, timeString, lat, lng, timezone }));
-  return jyotish.grahas.getGrahasPosition(
+function getBirthChart(dateString, timeString, lat, lng, timezone) {
+  // console.log(calculateHouses({ dateString, timeString, lat, lng, timezone }));
+  const grahaPositions = jyotish.grahas.getGrahasPosition(
     { dateString, timeString, lat, lng, timezone },
     { zodiacType: "S", houseType: "W" }
   );
+
+  const birthChart = {
+    aries: {
+      signs: [],
+    },
+    taurus: {
+      signs: [],
+    },
+    gemini: {
+      signs: [],
+    },
+    cancer: {
+      signs: [],
+    },
+    leo: {
+      signs: [],
+    },
+    virgo: {
+      signs: [],
+    },
+    libra: {
+      signs: [],
+    },
+    scorpio: {
+      signs: [],
+    },
+    sagittarius: {
+      signs: [],
+    },
+    capricorn: {
+      signs: [],
+    },
+    aquarius: {
+      signs: [],
+    },
+    pisces: {
+      signs: [],
+    },
+  };
+
+  Object.values(grahaPositions).map((graha) => {
+    birthChart[constants.RASHIS[graha.rashi]].signs.push({
+      graha: graha.graha,
+      nakshatra: graha.nakshatra,
+      longitude: graha.longitude,
+      isRetrograde: graha.isRetrograde,
+    });
+  });
+
+  return birthChart;
 }
 
 module.exports = {
@@ -79,5 +129,5 @@ module.exports = {
   getJulianDay,
   getUTCFixedStarPosition,
   getAllPlanets,
-  getAllGrahas,
+  getBirthChart,
 };
