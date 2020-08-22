@@ -137,6 +137,12 @@ function getBirthChart(dateString, timeString, lat, lng, timezone) {
   return birthChart;
 }
 
+
+/**
+ * 
+ * @param {Object} birthChart birthchart obtained from getBirthChart function
+ */
+
 function getNavamsaChart(birthChart) {
   const navamsaChart = {
     aries: {
