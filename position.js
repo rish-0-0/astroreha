@@ -2,6 +2,7 @@ const { swisseph, ...constants } = require("./constants");
 const ephemeris = require("ephemeris");
 const jyotish = require("jyotish");
 const { calculateHouses } = require("./houses");
+const grahas = require("jyotish/src/grahas");
 
 /**
  *
@@ -75,39 +76,51 @@ function getBirthChart(dateString, timeString, lat, lng, timezone) {
 
   const birthChart = {
     aries: {
+      rashi: "aries",
       signs: [],
     },
     taurus: {
+      rashi: "taurus",
       signs: [],
     },
     gemini: {
+      rashi: "gemini",
       signs: [],
     },
     cancer: {
+      rashi: "cancer",
       signs: [],
     },
     leo: {
+      rashi: "leo",
       signs: [],
     },
     virgo: {
+      rashi: "virgo",
       signs: [],
     },
     libra: {
+      rashi: "libra",
       signs: [],
     },
     scorpio: {
+      rashi: "scorpio",
       signs: [],
     },
     sagittarius: {
+      rashi: "sagittarius",
       signs: [],
     },
     capricorn: {
+      rashi: "capricorn",
       signs: [],
     },
     aquarius: {
+      rashi: "aquarius",
       signs: [],
     },
     pisces: {
+      rashi: "pisces",
       signs: [],
     },
   };
@@ -124,10 +137,79 @@ function getBirthChart(dateString, timeString, lat, lng, timezone) {
   return birthChart;
 }
 
+function getNavamsaChart(birthChart) {
+  const navamsaChart = {
+    aries: {
+      rashi: "aries",
+      signs: [],
+    },
+    taurus: {
+      rashi: "taurus",
+      signs: [],
+    },
+    gemini: {
+      rashi: "gemini",
+      signs: [],
+    },
+    cancer: {
+      rashi: "cancer",
+      signs: [],
+    },
+    leo: {
+      rashi: "leo",
+      signs: [],
+    },
+    virgo: {
+      rashi: "virgo",
+      signs: [],
+    },
+    libra: {
+      rashi: "libra",
+      signs: [],
+    },
+    scorpio: {
+      rashi: "scorpio",
+      signs: [],
+    },
+    sagittarius: {
+      rashi: "sagittarius",
+      signs: [],
+    },
+    capricorn: {
+      rashi: "capricorn",
+      signs: [],
+    },
+    aquarius: {
+      rashi: "aquarius",
+      signs: [],
+    },
+    pisces: {
+      rashi: "pisces",
+      signs: [],
+    },
+  };
+  Object.values(birthChart).map((rashi) => {
+    rashi.signs.map((graha) => {
+      const longitude = graha.longitude;
+      const longitudeMod30 = graha.longitude % 30;
+      const navamsa = longitudeMod30 / (10 / 3); // (30/9) as it's navamsa (9th division)
+      const navamsa_floor = Math.floor(navamsa);
+      const new_rashi = constants.rashi_calc(
+        constants.REVERSE_RASHIS[constants.NAVAMSHA_GROUPS[rashi.rashi]],
+        navamsa_floor
+      );
+      navamsaChart[constants.RASHIS[new_rashi]].signs.push(graha);
+    });
+  });
+
+  return navamsaChart;
+}
+
 module.exports = {
   getUTCPosition,
   getJulianDay,
   getUTCFixedStarPosition,
   getAllPlanets,
   getBirthChart,
+  getNavamsaChart,
 };
