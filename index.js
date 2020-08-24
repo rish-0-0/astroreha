@@ -27,7 +27,7 @@ function print(obj) {
 if (require.main == module) {
   // console.log(getUTCPosition("moon", new Date()));
   // console.log(getUTCFixedStarPosition("Aldebaran", new Date()));
-  // console.log(
+  // print(
   //   getAllPlanets(
   //     new Date("2015-08-10T17:09:01.000+08:00").toDateString(),
   //     10.0014,
@@ -36,16 +36,16 @@ if (require.main == module) {
   //   )
   // );
 
-  // console.log(getBirthChart("1990-07-04", "10:12:00", 29.7604, -95.3698, -5)); // Sophie
-  const birthChart = getBirthChart(
-    "1999-05-22",
-    "08:00:00",
-    28.6139,
-    77.209,
-    5.5
-  );
-  // print(birthChart);
-  print(getNavamsaChart(birthChart)); // Rishabh
+  // // console.log(getBirthChart("1990-07-04", "10:12:00", 29.7604, -95.3698, -5)); // Sophie
+  // const birthChart = getBirthChart(
+  //   "1999-05-22",
+  //   "08:00:00",
+  //   28.6139,
+  //   77.209,
+  //   5.5
+  // );
+  // // print(birthChart);
+  // print(getNavamsaChart(birthChart)); // Rishabh
 }
 
 module.exports = positioner;

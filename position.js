@@ -137,9 +137,8 @@ function getBirthChart(dateString, timeString, lat, lng, timezone) {
   return birthChart;
 }
 
-
 /**
- * 
+ *
  * @param {Object} birthChart birthchart obtained from getBirthChart function
  */
 
@@ -196,7 +195,6 @@ function getNavamsaChart(birthChart) {
   };
   Object.values(birthChart).map((rashi) => {
     rashi.signs.map((graha) => {
-      const longitude = graha.longitude;
       const longitudeMod30 = graha.longitude % 30;
       const navamsa = longitudeMod30 / (10 / 3); // (30/9) as it's navamsa (9th division)
       const navamsa_floor = Math.floor(navamsa);
