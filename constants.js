@@ -116,4 +116,57 @@ module.exports.rashi_calc = (rashi, num) => {
   return RASHI_ARRAY[(RASHI_MAP[rashi] + num) % RASHI_ARRAY.length];
 };
 
+module.exports.RASHI_LORDS = {
+  aries: "Ma",
+  taurus: "Ve",
+  gemini: "Me",
+  cancer: "Mo",
+  leo: "Su",
+  virgo: "Me",
+  libra: "Ve",
+  scorpio: "Ma",
+  sagittarius: "Ju",
+  capricorn: "Sa",
+  aquarius: "Sa",
+  pisces: "Ju"
+};
+
+module.exports.PLANET_RELATIONS = {
+  Su: {
+    friends: ["Su", "Mo", "Ma", "Ju"],
+    neutral: ["Me"],
+    enemies: ["Ve", "Sa"]
+  },
+  Mo: {
+    friends: ["Mo", "Sun", "Me"],
+    neutral: ["Ma", "Ju", "Ve", "Sa"],
+    enemies: []
+  },
+  Ma: {
+    friends: ["Ma", "Su", "Mo", "Ju"],
+    neutral: ["Ve", "Sa"],
+    enemies: ["Me"],
+  },
+  Me: {
+    friends: ["Me", "Su", "Ve"],
+    neutral: ["Ma", "Ju", "Sa"],
+    enemies: ["Mo"]
+  },
+  Ju: {
+    friends: ["Ju", "Su", "Mo", "Ma"],
+    neutral: ["Sa"],
+    enemies: ["Me", "Ve"],
+  },
+  Ve: {
+    friends: ["Ve", "Me", "Sa"],
+    neutral: ["Ma", "Ju"],
+    enemies: ["Su", "Mo"],
+  },
+  Sa: {
+    friends: ["Sa", "Me", "Ve"],
+    neutral: ["Ju"],
+    enemies: ["Su", "Mo", "Ma"],
+  },
+};
+
 module.exports.swisseph = swisseph;
