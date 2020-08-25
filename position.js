@@ -195,7 +195,7 @@ function getNavamsaChart(birthChart) {
   };
   Object.values(birthChart).map((rashi) => {
     rashi.signs.map((graha) => {
-      const longitudeMod30 = graha.longitude % 30;
+      const longitudeMod30 = graha.longitude % 30; // Remainder with 30 (Whole Sign only, as each Bhava is 30degrees)
       const navamsa = longitudeMod30 / (10 / 3); // (30/9) as it's navamsa (9th division)
       const navamsa_floor = Math.floor(navamsa);
       const new_rashi = constants.rashi_calc(
