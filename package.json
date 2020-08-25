@@ -1,6 +1,6 @@
 {
   "name": "astroreha",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Astrology Library to get Birth Chart and Navamsa Chart. Compatibility retrieval using the same.",
   "main": "index.js",
   "scripts": {
