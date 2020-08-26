@@ -123,6 +123,7 @@ function getBirthChart(dateString, timeString, lat, lng, timezone) {
       rashi: "pisces",
       signs: [],
     },
+    meta: {},
   };
 
   Object.values(grahaPositions).map((graha) => {
@@ -132,6 +133,13 @@ function getBirthChart(dateString, timeString, lat, lng, timezone) {
       longitude: graha.longitude,
       isRetrograde: graha.isRetrograde,
     });
+    birthChart.meta[graha.graha] = {
+      rashi: constants.RASHIS[graha.rashi],
+      graha: graha.graha,
+      nakshatra: graha.nakshatra,
+      longitude: graha.longitude,
+      isRetrograde: graha.isRetrograde,
+    };
   });
 
   return birthChart;
@@ -192,8 +200,13 @@ function getNavamsaChart(birthChart) {
       rashi: "pisces",
       signs: [],
     },
+    meta: {},
   };
   Object.values(birthChart).map((rashi) => {
+    if (rashi.signs == undefined) {
+      // metadata
+      return;
+    }
     rashi.signs.map((graha) => {
       const longitudeMod30 = graha.longitude % 30; // Remainder with 30 (Whole Sign only, as each Bhava is 30degrees)
       const navamsa = longitudeMod30 / (10 / 3); // (30/9) as it's navamsa (9th division)
@@ -203,6 +216,7 @@ function getNavamsaChart(birthChart) {
         navamsa_floor
       );
       navamsaChart[constants.RASHIS[new_rashi]].signs.push(graha);
+      navamsaChart.meta[graha.graha] = { ...graha, rashi: new_rashi };
     });
   });
 
