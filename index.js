@@ -13,6 +13,7 @@ const {
   getUTCFixedStarPosition,
   getAllPlanets,
   getBirthChart,
+  nakshatras,
 } = positioner;
 
 /**
@@ -45,7 +46,8 @@ if (require.main == module) {
     5.5
   );
   // print(birthChart.meta);
-  print(getNavamsaChart(birthChart).meta); // Rishabh
+  // print(getNavamsaChart(birthChart).meta); // Rishabh
+  console.log(nakshatras.calculateNakshatraCompatibility("Cat", "Hare"));
 }
 
 module.exports = positioner;

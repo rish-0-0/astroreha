@@ -3,6 +3,7 @@ const ephemeris = require("ephemeris");
 const jyotish = require("jyotish");
 const { calculateHouses } = require("./houses");
 const grahas = require("jyotish/src/grahas");
+const nakshatras = require("./nakshatra");
 
 /**
  *
@@ -230,4 +231,5 @@ module.exports = {
   getAllPlanets,
   getBirthChart,
   getNavamsaChart,
+  nakshatras,
 };
