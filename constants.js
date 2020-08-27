@@ -337,4 +337,7 @@ module.exports.NAKSHATRA_ANIMAL_SCORE = {
 
 module.exports.DEFAULT_THRESHOLD = 0.4;
 
+module.exports.GOOD_HOUSES = [1,2,3,4,5,7,9,10,11];
+module.exports.BAD_HOUSES = [6,8,12];
+
 module.exports.swisseph = swisseph;

@@ -7,14 +7,15 @@
 
 */
 const positioner = require("./position");
-const { getNavamsaChart } = require("./position");
 const {
   getUTCPosition,
   getUTCFixedStarPosition,
   getAllPlanets,
   getBirthChart,
   nakshatras,
-  rashis
+  rashis,
+  compatibility,
+  getNavamsaChart
 } = positioner;
 
 /**
@@ -45,9 +46,22 @@ if (require.main == module) {
     28.6139,
     77.209,
     5.5
-  );
-  // print(birthChart.meta);
+  ); // Sophie
+  // print(birthChart.meta.La);
+  const sophieNavamsaChart = getNavamsaChart(birthChart);
+  // print(sophieNavamsaChart.meta.La);
+  // print(compatibility.getHousesOfChart(sophieNavamsaChart));
+  const birthChartRishabh = getBirthChart(
+    "1990-07-04",
+    "10:12:00",
+    29.7604,
+    -95.3698,
+    -5
+  ); // Rishabh
+  // print(birthChart.meta.La);
+  // print(compatibility.getHousesOfChart(birthChart));
   // console.log(rashis.getRashi(birthChart));
+  console.log(compatibility.seventhHouseOfD9Check(sophieNavamsaChart, birthChartRishabh));
   // print(getNavamsaChart(birthChart).meta); // Rishabh
   // console.log(nakshatras.calculateNakshatraCompatibility("Cat", "Hare"));
 }

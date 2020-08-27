@@ -5,6 +5,7 @@ const { calculateHouses } = require("./houses");
 const grahas = require("jyotish/src/grahas");
 const nakshatras = require("./nakshatra");
 const rashis = require('./rashi');
+const compatibility = require('./compatibility');
 
 /**
  *
@@ -136,7 +137,7 @@ function getBirthChart(dateString, timeString, lat, lng, timezone) {
       isRetrograde: graha.isRetrograde,
     });
     birthChart.meta[graha.graha] = {
-      rashi: constants.RASHIS[graha.rashi],
+      rashi: graha.rashi,
       graha: graha.graha,
       nakshatra: graha.nakshatra,
       longitude: graha.longitude,
@@ -234,4 +235,5 @@ module.exports = {
   getNavamsaChart,
   nakshatras,
   rashis,
+  compatibility
 };
