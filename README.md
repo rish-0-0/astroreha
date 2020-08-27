@@ -21,8 +21,12 @@ const astroreha = require("astroreha");
  * @param {Number} lng longitude
  * @param {Number} timezone timezone in hours
  */
-astroreha.getBirthChart("1999-05-22", "08:00:00", 28.6139, 77.209, 5.5);
+astroreha.positioner.getBirthChart("1999-05-22", "08:00:00", 28.6139, 77.209, 5.5);
+astroreha.compatibility.areCompatible({dateString, timeString, lat, lng, timezone}, {dateString, timeString, lat, lng, timezone});
 ```
+## Breaking Changes
+1. Not a default Export anymore
+2. Gives Positioner and Compatibility Feature
 
 
 
