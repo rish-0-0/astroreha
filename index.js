@@ -14,6 +14,7 @@ const {
   getAllPlanets,
   getBirthChart,
   nakshatras,
+  rashis
 } = positioner;
 
 /**
@@ -46,8 +47,9 @@ if (require.main == module) {
     5.5
   );
   // print(birthChart.meta);
+  // console.log(rashis.getRashi(birthChart));
   // print(getNavamsaChart(birthChart).meta); // Rishabh
-  console.log(nakshatras.calculateNakshatraCompatibility("Cat", "Hare"));
+  // console.log(nakshatras.calculateNakshatraCompatibility("Cat", "Hare"));
 }
 
 module.exports = positioner;

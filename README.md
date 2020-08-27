@@ -6,6 +6,7 @@ npm i -S astroreha
 
 1. Default House System: `Whole Sign`
 2. Default Ayanamsha Used: `Lahiri`
+3. Compatibility can have maximum 30 points. Default threshold for matching is 12. (>=12)
 
 ### Get Birth Chart
 

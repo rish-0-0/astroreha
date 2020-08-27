@@ -4,6 +4,7 @@ const jyotish = require("jyotish");
 const { calculateHouses } = require("./houses");
 const grahas = require("jyotish/src/grahas");
 const nakshatras = require("./nakshatra");
+const rashis = require('./rashi');
 
 /**
  *
@@ -232,4 +233,5 @@ module.exports = {
   getBirthChart,
   getNavamsaChart,
   nakshatras,
+  rashis,
 };
