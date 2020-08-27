@@ -58,7 +58,7 @@ if (require.main == module) {
     -95.3698,
     -5
   ); // Rishabh
-  // print(birthChart.meta.La);
+  print(birthChart.meta.La);
   // print(compatibility.getHousesOfChart(birthChart));
   // console.log(rashis.getRashi(birthChart));
   console.log(compatibility.oppositeSignOfBirthCheck(birthChart, birthChartRishabh));

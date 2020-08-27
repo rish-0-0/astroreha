@@ -355,4 +355,7 @@ module.exports.OPPOSITE_SIGNS = {
   pisces: "virgo",
 };
 
+module.exports.GOOD_CONNECTION_TYPES = [1, 2, 3, 5, 7, 9, 11];
+module.exports.BAD_CONNECTION_TYPES = [4, 6, 8, 10, 12];
+
 module.exports.swisseph = swisseph;

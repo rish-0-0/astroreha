@@ -59,6 +59,35 @@ function areCompatibile(
 
   if (!total_score) return false; // Navamsa Chart condition
 
+  total_score += oppositeSignOfBirthCheck(person1BirthChart, person2BirthChart); // 7th House Map Match?
+
+  // Are the lords of the rising sign friends
+  total_score += areFriends(
+    constants.RASHI_LORDS[constants.RASHIS[person1BirthChart.meta.La.rashi]],
+    constants.RASHI_LORDS[constants.RASHIS[person2BirthChart.meta.La.rashi]]
+  );
+  // Rising to Rising Connection
+  total_score += connectionType(
+    person1BirthChart.meta.La.rashi,
+    person2BirthChart.meta.La.rashi
+  );
+
+  // Moon to Moon connection
+
+  total_score += connectionType(
+    person1BirthChart.meta.Mo.rashi,
+    person2BirthChart.meta.Mo.rashi
+  );
+
+  // Moon's Ruling Lords Friends
+
+  total_score += areFriends(
+    constants.RASHI_LORDS[constants.RASHIS[person1BirthChart.meta.Mo.rashi]],
+    constants.RASHI_LORDS[constants.RASHIS[person2BirthChart.meta.Mo.rashi]]
+  );
+
+  // Moon conjunct or opposite sun?
+
   return total_score / 30 >= threshold; // 30 is total score possible
 }
 
@@ -150,17 +179,23 @@ function oppositeSignOfBirthCheck(birthChart1, birthChart2) {
 
   // First Person's rising, sun or moon signs
   if (
-    birthChart1.meta.La.rashi === oppositeSignOfRulingLordSignSecondPerson ||
-    birthChart1.meta.Su.rashi === oppositeSignOfRulingLordSignSecondPerson ||
-    birthChart1.meta.Mo.rashi === oppositeSignOfRulingLordSignSecondPerson
+    constants.RASHIS[birthChart1.meta.La.rashi] ===
+      oppositeSignOfRulingLordSignSecondPerson ||
+    constants.RASHIS[birthChart1.meta.Su.rashi] ===
+      oppositeSignOfRulingLordSignSecondPerson ||
+    constants.RASHIS[birthChart1.meta.Mo.rashi] ===
+      oppositeSignOfRulingLordSignSecondPerson
   ) {
     total_score += 2;
   }
 
   if (
-    birthChart2.meta.La.rashi === oppositeSignOfRulingLordSignFirstPerson ||
-    birthChart2.meta.Su.rashi === oppositeSignOfRulingLordSignFirstPerson ||
-    birthChart2.meta.Mo.rashi === oppositeSignOfRulingLordSignFirstPerson
+    constants.RASHIS[birthChart2.meta.La.rashi] ===
+      oppositeSignOfRulingLordSignFirstPerson ||
+    constants.RASHIS[birthChart2.meta.Su.rashi] ===
+      oppositeSignOfRulingLordSignFirstPerson ||
+    constants.RASHIS[birthChart2.meta.Mo.rashi] ===
+      oppositeSignOfRulingLordSignFirstPerson
   ) {
     total_score += 2;
   }
@@ -168,9 +203,36 @@ function oppositeSignOfBirthCheck(birthChart1, birthChart2) {
   return total_score;
 }
 
+function areFriends(planet1, planet2) {
+  const isFriend = constants.PLANET_RELATIONS[planet1].friends.indexOf(planet2);
+  if (isFriend) {
+    return 2;
+  }
+  const isNeutral = constants.PLANET_RELATIONS[planet1].neutral.indexOf(
+    planet2
+  );
+  if (isNeutral) return 1;
+  return 0;
+}
+
+function connectionType(sign1, sign2) {
+  const sign1_map = constants.RASHI_MAP[sign1];
+  const sign2_map = constants.RASHI_MAP[sign2];
+  let result;
+  if (sign1_map <= sign2_map) {
+    result = sign2_map - sign1_map + 1;
+  } else result = sign1_map - sign2_map + 1;
+  if (constants.GOOD_CONNECTION_TYPES.indexOf(result)) {
+    return 1; // point
+  }
+  return 0;
+}
+
 module.exports = {
   areCompatibile,
   getHousesOfChart,
   seventhHouseOfD9Check,
   oppositeSignOfBirthCheck,
+  areFriends,
+  connectionType,
 };
