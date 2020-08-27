@@ -61,7 +61,7 @@ if (require.main == module) {
   // print(birthChart.meta.La);
   // print(compatibility.getHousesOfChart(birthChart));
   // console.log(rashis.getRashi(birthChart));
-  console.log(compatibility.seventhHouseOfD9Check(sophieNavamsaChart, birthChartRishabh));
+  console.log(compatibility.oppositeSignOfBirthCheck(birthChart, birthChartRishabh));
   // print(getNavamsaChart(birthChart).meta); // Rishabh
   // console.log(nakshatras.calculateNakshatraCompatibility("Cat", "Hare"));
 }

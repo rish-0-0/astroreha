@@ -45,10 +45,16 @@ function areCompatibile(
   const person2NavamsaChartHouses = getHousesOfChart(person2NavamsaChart);
   let total_score = 0;
 
-  let D9_p1N_p2B_match = seventhHouseOfD9Check(person1NavamsaChart, person2BirthChart);
+  let D9_p1N_p2B_match = seventhHouseOfD9Check(
+    person1NavamsaChart,
+    person2BirthChart
+  );
   if (D9_p1N_p2B_match) total_score++;
 
-  let D9_p2N_p1B_match = seventhHouseOfD9Check(person2NavamsaChart, person1BirthChart);
+  let D9_p2N_p1B_match = seventhHouseOfD9Check(
+    person2NavamsaChart,
+    person1BirthChart
+  );
   if (D9_p2N_p1B_match) total_score++;
 
   if (!total_score) return false; // Navamsa Chart condition
@@ -104,7 +110,6 @@ function seventhHouseOfD9Check(navamsaChart1, birthChart2) {
   const firstPersonsD9LordHouseNumberInSecondPersonsBirthChart =
     secondPersonGetRashis[whereD9SeventhHouseRashiLordSits];
 
-
   return (
     constants.GOOD_HOUSES.indexOf(
       Number(firstPersonsD9LordHouseNumberInSecondPersonsBirthChart)
@@ -112,4 +117,60 @@ function seventhHouseOfD9Check(navamsaChart1, birthChart2) {
   );
 }
 
-module.exports = { areCompatibile, getHousesOfChart, seventhHouseOfD9Check };
+function oppositeSignOfBirthCheck(birthChart1, birthChart2) {
+  const firstPersonHouses = getHousesOfChart(birthChart1);
+  const secondPersonHouses = getHousesOfChart(birthChart2);
+
+  const firstPersonSeventhHouseSign = firstPersonHouses[7];
+  const secondPersonSeventhHouseSign = secondPersonHouses[7];
+
+  const rulingLordOfFirstPersonSeventhHouseSign =
+    constants.RASHI_LORDS[constants.RASHIS[firstPersonSeventhHouseSign]];
+  const rulingLordOfSecondPersonSeventhHouseSign =
+    constants.RASHI_LORDS[constants.RASHIS[secondPersonSeventhHouseSign]];
+
+  const signOfRulingLordOfFirstPerson =
+    birthChart1.meta[rulingLordOfFirstPersonSeventhHouseSign].rashi;
+  const signOfRulingLordOfSecondPerson =
+    birthChart2.meta[rulingLordOfSecondPersonSeventhHouseSign].rashi;
+
+  const oppositeSignOfRulingLordSignFirstPerson =
+    constants.OPPOSITE_SIGNS[constants.RASHIS[signOfRulingLordOfFirstPerson]];
+  const oppositeSignOfRulingLordSignSecondPerson =
+    constants.OPPOSITE_SIGNS[constants.RASHIS[signOfRulingLordOfSecondPerson]];
+
+  console.log(
+    signOfRulingLordOfSecondPerson,
+    signOfRulingLordOfFirstPerson,
+    oppositeSignOfRulingLordSignSecondPerson,
+    oppositeSignOfRulingLordSignFirstPerson
+  );
+
+  let total_score = 0;
+
+  // First Person's rising, sun or moon signs
+  if (
+    birthChart1.meta.La.rashi === oppositeSignOfRulingLordSignSecondPerson ||
+    birthChart1.meta.Su.rashi === oppositeSignOfRulingLordSignSecondPerson ||
+    birthChart1.meta.Mo.rashi === oppositeSignOfRulingLordSignSecondPerson
+  ) {
+    total_score += 2;
+  }
+
+  if (
+    birthChart2.meta.La.rashi === oppositeSignOfRulingLordSignFirstPerson ||
+    birthChart2.meta.Su.rashi === oppositeSignOfRulingLordSignFirstPerson ||
+    birthChart2.meta.Mo.rashi === oppositeSignOfRulingLordSignFirstPerson
+  ) {
+    total_score += 2;
+  }
+
+  return total_score;
+}
+
+module.exports = {
+  areCompatibile,
+  getHousesOfChart,
+  seventhHouseOfD9Check,
+  oppositeSignOfBirthCheck,
+};
