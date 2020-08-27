@@ -62,24 +62,6 @@ if (require.main == module) {
   // print(compatibility.getHousesOfChart(birthChart));
   // console.log(rashis.getRashi(birthChart));
   // console.log(compatibility.oppositeSignOfBirthCheck(birthChart, birthChartRishabh));
-  // console.log(
-  //   compatibility.areCompatibile(
-  //     {
-  //       dateString: "1990-07-04",
-  //       timeString: "10:12:00",
-  //       lat: 29.7604,
-  //       lng: -95.3698,
-  //       timezone: -7,
-  //     },
-  //     {
-  //       dateString: "1999-05-22",
-  //       timeString: "09:05:00",
-  //       lat: 28.6139,
-  //       lng: 77.209,
-  //       timezone: 5.5,
-  //     }
-  //   )
-  // );
   // print(getNavamsaChart(birthChart).meta); // Rishabh
   // console.log(nakshatras.calculateNakshatraCompatibility("Cat", "Hare"));
 }
