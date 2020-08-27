@@ -335,4 +335,6 @@ module.exports.NAKSHATRA_ANIMAL_SCORE = {
   },
 };
 
+module.exports.DEFAULT_THRESHOLD = 0.4;
+
 module.exports.swisseph = swisseph;
