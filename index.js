@@ -7,16 +7,16 @@
 
 */
 const positioner = require("./position");
-const {
-  getUTCPosition,
-  getUTCFixedStarPosition,
-  getAllPlanets,
-  getBirthChart,
-  nakshatras,
-  rashis,
-  compatibility,
-  getNavamsaChart
-} = positioner;
+const compatibility = require("./compatibility");
+// const {
+//   getUTCPosition,
+//   getUTCFixedStarPosition,
+//   getAllPlanets,
+//   // getBirthChart,
+//   nakshatras,
+//   rashis,
+//   getNavamsaChart,
+// } = positioner;
 
 /**
  *
@@ -40,30 +40,48 @@ if (require.main == module) {
   // );
 
   // // console.log(getBirthChart("1990-07-04", "10:12:00", 29.7604, -95.3698, -5)); // Sophie
-  const birthChart = getBirthChart(
-    "1999-05-22",
-    "08:00:00",
-    28.6139,
-    77.209,
-    5.5
-  ); // Sophie
+  // const birthChart = getBirthChart(
+  //   "1999-05-22",
+  //   "08:00:00",
+  //   28.6139,
+  //   77.209,
+  //   5.5
+  // ); // Sophie
+  // // print(birthChart.meta.La);
+  // const sophieNavamsaChart = getNavamsaChart(birthChart);
+  // // print(sophieNavamsaChart.meta.La);
+  // // print(compatibility.getHousesOfChart(sophieNavamsaChart));
+  // const birthChartRishabh = getBirthChart(
+  //   "1990-07-04",
+  //   "10:12:00",
+  //   29.7604,
+  //   -95.3698,
+  //   -5
+  // ); // Rishabh
   // print(birthChart.meta.La);
-  const sophieNavamsaChart = getNavamsaChart(birthChart);
-  // print(sophieNavamsaChart.meta.La);
-  // print(compatibility.getHousesOfChart(sophieNavamsaChart));
-  const birthChartRishabh = getBirthChart(
-    "1990-07-04",
-    "10:12:00",
-    29.7604,
-    -95.3698,
-    -5
-  ); // Rishabh
-  print(birthChart.meta.La);
   // print(compatibility.getHousesOfChart(birthChart));
   // console.log(rashis.getRashi(birthChart));
-  console.log(compatibility.oppositeSignOfBirthCheck(birthChart, birthChartRishabh));
+  // console.log(compatibility.oppositeSignOfBirthCheck(birthChart, birthChartRishabh));
+  console.log(
+    compatibility.areCompatibile(
+      {
+        dateString: "1990-07-04",
+        timeString: "10:12:00",
+        lat: 29.7604,
+        lng: -95.3698,
+        timezone: -7,
+      },
+      {
+        dateString: "1999-05-22",
+        timeString: "09:05:00",
+        lat: 28.6139,
+        lng: 77.209,
+        timezone: 5.5,
+      }
+    )
+  );
   // print(getNavamsaChart(birthChart).meta); // Rishabh
   // console.log(nakshatras.calculateNakshatraCompatibility("Cat", "Hare"));
 }
 
-module.exports = positioner;
+module.exports = { compatibility, positioner };

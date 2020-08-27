@@ -1,5 +1,9 @@
 const constants = require("./constants");
-const { getBirthChart, getNavamsaChart } = require("./position");
+const { getNavamsaChart, getBirthChart } = require("./position");
+const {
+  calculateNakshatra,
+  calculateNakshatraCompatibility,
+} = require("./nakshatra");
 /**
  * @typedef {Object} birthDetails
  * @property {String} dateString - Format: YYYY-MM-DD
@@ -88,13 +92,155 @@ function areCompatibile(
 
   // Moon conjunct or opposite sun?
 
+  total_score += Number(
+    person1BirthChart.meta.Mo.rashi === person2BirthChart.meta.Su.rashi ||
+      person1BirthChart.meta.Su.rashi === person2BirthChart.meta.Mo.rashi
+  );
+
+  // Sun to Sun connection
+  total_score += connectionType(
+    person1BirthChart.meta.Su.rashi,
+    person2BirthChart.meta.Su.rashi
+  );
+
+  // Sun Illumination one (Which house does partnet's sun fall into?)
+
+  total_score += signInterference(person1BirthChart, person2BirthChart, "Su");
+
+  // Sun Conjunct 7th House?
+
+  total_score += planetConjunctHouse(
+    person1BirthChart,
+    person2BirthChart,
+    "Su",
+    7
+  );
+
+  // Venus to Venus Connection
+
+  total_score += connectionType(
+    person1BirthChart.meta.Ve.rashi,
+    person2BirthChart.meta.Ve.rashi
+  );
+
+  // Are Venus Ruling Lord Friends?
+
+  total_score += areFriends(
+    constants.RASHI_LORDS[constants.RASHIS[person1BirthChart.meta.Ve.rashi]],
+    constants.RASHI_LORDS[constants.RASHIS[person2BirthChart.meta.Ve.rashi]]
+  );
+
+  // Manglik Connection
+
+  total_score += checkManglikConnection(person1BirthChart, person2BirthChart);
+
+  // Mars Ruling Lord friends?
+
+  total_score += areFriends(
+    constants.RASHI_LORDS[constants.RASHIS[person1BirthChart.meta.Ma.rashi]],
+    constants.RASHI_LORDS[constants.RASHIS[person2BirthChart.meta.Ma.rashi]]
+  );
+
+  // Mars to Mars Connection
+  total_score += connectionType(
+    person1BirthChart.meta.Ma.rashi,
+    person2BirthChart.meta.Ma.rashi
+  );
+
+  // Rahu to Rahu or Ketu to Ketu Connection Correspondence
+  if (
+    checkPlanetCorrespondenceOfPlanetInSecondChart(
+      person1BirthChart,
+      person2BirthChart,
+      "Ra"
+    ) ||
+    checkPlanetCorrespondenceOfPlanetInSecondChart(
+      person1BirthChart,
+      person2BirthChart,
+      "Ke"
+    )
+  ) {
+    if (
+      checkPlanetCorrespondenceOfPlanetInSecondChart(
+        person2BirthChart,
+        person1BirthChart,
+        "Ra"
+      ) ||
+      checkPlanetCorrespondenceOfPlanetInSecondChart(
+        person2BirthChart,
+        person1BirthChart,
+        "Ke"
+      )
+    ) {
+      // Two way connection
+      total_score += 2;
+    } else total_score += 1; // One way connection
+  } else {
+    if (
+      checkPlanetCorrespondenceOfPlanetInSecondChart(
+        person2BirthChart,
+        person1BirthChart,
+        "Ra"
+      ) ||
+      checkPlanetCorrespondenceOfPlanetInSecondChart(
+        person2BirthChart,
+        person1BirthChart,
+        "Ke"
+      )
+    ) {
+      total_score += 1; // One way connection
+    } else {
+      total_score += 0;
+    }
+  }
+  // Saturn to Saturn Connection
+  if (
+    checkPlanetCorrespondenceOfPlanetInSecondChart(
+      person1BirthChart,
+      person2BirthChart,
+      "Sa"
+    )
+  ) {
+    if (
+      checkPlanetCorrespondenceOfPlanetInSecondChart(
+        person2BirthChart,
+        person1BirthChart,
+        "Sa"
+      )
+    ) {
+      // Two way connection
+      total_score += 2;
+    } else total_score += 1; // One way connection
+  } else {
+    if (
+      checkPlanetCorrespondenceOfPlanetInSecondChart(
+        person2BirthChart,
+        person1BirthChart,
+        "Sa"
+      )
+    ) {
+      total_score += 1; // One way connection
+    } else {
+      total_score += 0; // No connection
+    }
+  }
+  // Nakshatra Compatibility (Overall)
+
+  const animalOfPerson1 = calculateNakshatra(person1BirthChart).animal;
+  const animalOfPerson2 = calculateNakshatra(person2BirthChart).animal;
+
+  total_score += calculateNakshatraCompatibility(
+    animalOfPerson1,
+    animalOfPerson2
+  );
+
   return total_score / 30 >= threshold; // 30 is total score possible
 }
 
 /**
  *
  * @param {Object} chart birthChart
- * @returns {Object} key value: rashi: house
+ * @returns {Object} key value: house: rashi
  */
 function getHousesOfChart(chart) {
   const ascendantRashi = chart.meta.La.rashi;
@@ -168,12 +314,12 @@ function oppositeSignOfBirthCheck(birthChart1, birthChart2) {
   const oppositeSignOfRulingLordSignSecondPerson =
     constants.OPPOSITE_SIGNS[constants.RASHIS[signOfRulingLordOfSecondPerson]];
 
-  console.log(
-    signOfRulingLordOfSecondPerson,
-    signOfRulingLordOfFirstPerson,
-    oppositeSignOfRulingLordSignSecondPerson,
-    oppositeSignOfRulingLordSignFirstPerson
-  );
+  // console.log(
+  //   signOfRulingLordOfSecondPerson,
+  //   signOfRulingLordOfFirstPerson,
+  //   oppositeSignOfRulingLordSignSecondPerson,
+  //   oppositeSignOfRulingLordSignFirstPerson
+  // );
 
   let total_score = 0;
 
@@ -216,16 +362,109 @@ function areFriends(planet1, planet2) {
 }
 
 function connectionType(sign1, sign2) {
-  const sign1_map = constants.RASHI_MAP[sign1];
-  const sign2_map = constants.RASHI_MAP[sign2];
+  const sign1_map = constants.RASHI_MAP[sign1] + 1;
+  const sign2_map = constants.RASHI_MAP[sign2] + 1;
   let result;
-  if (sign1_map <= sign2_map) {
-    result = sign2_map - sign1_map + 1;
-  } else result = sign1_map - sign2_map + 1;
+  // Result is shortest path from sign1 to sign2
+  if (sign1_map <= 7 && sign2_map >= 7) {
+    result = sign2_map - (12 - sign1_map) + 1;
+  } else if (sign1_map >= 7 && sign2_map <= 7) {
+    result = sign1_map - (12 - sign2_map) + 1;
+  } else {
+    result = Math.abs(sign1_map - sign2_map) + 1;
+  }
   if (constants.GOOD_CONNECTION_TYPES.indexOf(result)) {
     return 1; // point
   }
   return 0;
+}
+
+function signInterference(birthChart1, birthChart2, planet) {
+  const firstPersonHouses = getHousesOfChart(birthChart1);
+  const firstPersonReverseHouses = getReverseHousesOfChart(firstPersonHouses);
+
+  const secondPersonHouses = getHousesOfChart(birthChart2);
+  const secondPersonReverseHouses = getReverseHousesOfChart(secondPersonHouses);
+
+  const firstPersonInterfereSecondPersonPlanetHouse =
+    firstPersonReverseHouses[birthChart2.meta[planet].rashi]; // Interfere the planets in one other's charts
+  const secondPersonInterfereFirstPersonPlanetHouse =
+    secondPersonReverseHouses[birthChart1.meta[planet].rashi]; // Interfere the planets in one other's charts
+  let score = 0;
+  if (
+    constants.GOOD_HOUSES.indexOf(
+      Number(firstPersonInterfereSecondPersonPlanetHouse)
+    )
+  ) {
+    score++;
+  }
+
+  if (
+    constants.GOOD_HOUSES.indexOf(
+      Number(secondPersonInterfereFirstPersonPlanetHouse)
+    )
+  ) {
+    score++;
+  }
+
+  return score;
+}
+
+function planetConjunctHouse(birthChart1, birthChart2, planet, house) {
+  const person1Houses = getHousesOfChart(birthChart1);
+  const person2Houses = getHousesOfChart(birthChart2);
+
+  const person1ReverseHouses = getReverseHousesOfChart(person1Houses);
+  const person2ReverseHouses = getReverseHousesOfChart(person2Houses);
+
+  return Number(
+    person1ReverseHouses[birthChart2.meta[planet].rashi] == house ||
+      person2ReverseHouses[birthChart1.meta[planet].rashi] == house
+  );
+}
+
+function checkManglikConnection(birthChart1, birthChart2) {
+  const person1Houses = getHousesOfChart(birthChart1);
+  const person2Houses = getHousesOfChart(birthChart2);
+
+  const person1ReverseHouses = getReverseHousesOfChart(person1Houses);
+  const person2ReverseHouses = getReverseHousesOfChart(person2Houses);
+
+  const person1MangalRashi = birthChart1.meta.Ma.rashi;
+  const person2MangalRashi = birthChart2.meta.Ma.rashi;
+
+  const person1MangalBhava = person1ReverseHouses[person1MangalRashi];
+  const person2MangalBhava = person2ReverseHouses[person2MangalRashi];
+
+  if (constants.MANGLIK.indexOf(Number(person1MangalBhava))) {
+    if (constants.MANGLIK.indexOf(Number(person2MangalBhava))) {
+      // Both Manglik
+      return 1;
+    }
+    // One is Manglik
+    return 0;
+  } else {
+    if (constants.MANGLIK.indexOf(Number(person2MangalBhava))) {
+      // One is Manglik
+      return 0;
+    }
+    // Both are Manglik
+    return 1;
+  }
+}
+
+function checkPlanetCorrespondenceOfPlanetInSecondChart(
+  birthChart1,
+  birthChart2,
+  planet
+) {
+  const rashiOfPlanetBC1 = birthChart1.meta[planet].rashi;
+  const signsInBC2 = birthChart2[constants.RASHIS[rashiOfPlanetBC1]].signs;
+
+  if (signsInBC2.length) {
+    return true;
+  }
+  return false;
 }
 
 module.exports = {
@@ -235,4 +474,7 @@ module.exports = {
   oppositeSignOfBirthCheck,
   areFriends,
   connectionType,
+  signInterference,
+  planetConjunctHouse,
+  checkPlanetCorrespondenceOfPlanetInSecondChart,
 };
