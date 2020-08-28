@@ -21,7 +21,15 @@ const astroreha = require("astroreha");
  * @param {Number} lng longitude
  * @param {Number} timezone timezone in hours
  */
-astroreha.positioner.getBirthChart("1999-05-22", "08:00:00", 28.6139, 77.209, 5.5);
+const birthChart = astroreha.positioner.getBirthChart("1999-05-22", "08:00:00", 28.6139, 77.209, 5.5);
+// Get Rashi
+birthChart.meta.Mo.rashi // Rashi is Moon Sign in Indian Astrology
+// Get Sun Sign
+birthChart.meta.Su.rashi
+// Get Grahas in a certain Rashi
+birthChart.aries.signs // returns an array of grahas
+
+// Get compatibility (returns Boolean)
 astroreha.compatibility.areCompatible({dateString, timeString, lat, lng, timezone}, {dateString, timeString, lat, lng, timezone});
 ```
 ## Breaking Changes
