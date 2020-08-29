@@ -238,6 +238,230 @@ function areCompatibile(
 }
 
 /**
+ * Figure out whether two people are compatible (Default threshold=0.4)
+ * @param {birthDetails} person1 First Person
+ * @param {birthDetails} person2 Second Person
+ * @param {Number} [threshold=0.4] - Threshold above which function returns true
+ * @returns {Boolean} Whether two people are compatible given threshold (Default=0.4)
+ */
+function getCompatibilityScore(
+  person1,
+  person2,
+  threshold = constants.DEFAULT_THRESHOLD
+) {
+  const person1BirthChart = getBirthChart(
+    person1.dateString,
+    person1.timeString,
+    person1.lat,
+    person1.lng,
+    person1.timezone
+  );
+  const person2BirthChart = getBirthChart(
+    person2.dateString,
+    person2.timeString,
+    person2.lat,
+    person2.lng,
+    person2.timezone
+  );
+  const person1NavamsaChart = getNavamsaChart(person1BirthChart);
+  const person2NavamsaChart = getNavamsaChart(person2BirthChart);
+
+  const person1BirthChartHouses = getHousesOfChart(person1BirthChart);
+  const person2BirthChartHouses = getHousesOfChart(person2BirthChart);
+
+  const person1NavamsaChartHouses = getHousesOfChart(person1NavamsaChart);
+  const person2NavamsaChartHouses = getHousesOfChart(person2NavamsaChart);
+  let total_score = 0;
+
+  let D9_p1N_p2B_match = seventhHouseOfD9Check(
+    person1NavamsaChart,
+    person2BirthChart
+  );
+  if (D9_p1N_p2B_match) total_score++;
+
+  let D9_p2N_p1B_match = seventhHouseOfD9Check(
+    person2NavamsaChart,
+    person1BirthChart
+  );
+  if (D9_p2N_p1B_match) total_score++;
+
+  if (!total_score) return false; // Navamsa Chart condition
+
+  total_score += oppositeSignOfBirthCheck(person1BirthChart, person2BirthChart); // 7th House Map Match?
+
+  // Are the lords of the rising sign friends
+  total_score += areFriends(
+    constants.RASHI_LORDS[constants.RASHIS[person1BirthChart.meta.La.rashi]],
+    constants.RASHI_LORDS[constants.RASHIS[person2BirthChart.meta.La.rashi]]
+  );
+  // Rising to Rising Connection
+  total_score += connectionType(
+    person1BirthChart.meta.La.rashi,
+    person2BirthChart.meta.La.rashi
+  );
+
+  // Moon to Moon connection
+
+  total_score += connectionType(
+    person1BirthChart.meta.Mo.rashi,
+    person2BirthChart.meta.Mo.rashi
+  );
+
+  // Moon's Ruling Lords Friends
+
+  total_score += areFriends(
+    constants.RASHI_LORDS[constants.RASHIS[person1BirthChart.meta.Mo.rashi]],
+    constants.RASHI_LORDS[constants.RASHIS[person2BirthChart.meta.Mo.rashi]]
+  );
+
+  // Moon conjunct or opposite sun?
+
+  total_score += Number(
+    person1BirthChart.meta.Mo.rashi === person2BirthChart.meta.Su.rashi ||
+      person1BirthChart.meta.Su.rashi === person2BirthChart.meta.Mo.rashi
+  );
+
+  // Sun to Sun connection
+  total_score += connectionType(
+    person1BirthChart.meta.Su.rashi,
+    person2BirthChart.meta.Su.rashi
+  );
+
+  // Sun Illumination one (Which house does partnet's sun fall into?)
+
+  total_score += signInterference(person1BirthChart, person2BirthChart, "Su");
+
+  // Sun Conjunct 7th House?
+
+  total_score += planetConjunctHouse(
+    person1BirthChart,
+    person2BirthChart,
+    "Su",
+    7
+  );
+
+  // Venus to Venus Connection
+
+  total_score += connectionType(
+    person1BirthChart.meta.Ve.rashi,
+    person2BirthChart.meta.Ve.rashi
+  );
+
+  // Are Venus Ruling Lord Friends?
+
+  total_score += areFriends(
+    constants.RASHI_LORDS[constants.RASHIS[person1BirthChart.meta.Ve.rashi]],
+    constants.RASHI_LORDS[constants.RASHIS[person2BirthChart.meta.Ve.rashi]]
+  );
+
+  // Manglik Connection
+
+  total_score += checkManglikConnection(person1BirthChart, person2BirthChart);
+
+  // Mars Ruling Lord friends?
+
+  total_score += areFriends(
+    constants.RASHI_LORDS[constants.RASHIS[person1BirthChart.meta.Ma.rashi]],
+    constants.RASHI_LORDS[constants.RASHIS[person2BirthChart.meta.Ma.rashi]]
+  );
+
+  // Mars to Mars Connection
+  total_score += connectionType(
+    person1BirthChart.meta.Ma.rashi,
+    person2BirthChart.meta.Ma.rashi
+  );
+
+  // Rahu to Rahu or Ketu to Ketu Connection Correspondence
+  if (
+    checkPlanetCorrespondenceOfPlanetInSecondChart(
+      person1BirthChart,
+      person2BirthChart,
+      "Ra"
+    ) ||
+    checkPlanetCorrespondenceOfPlanetInSecondChart(
+      person1BirthChart,
+      person2BirthChart,
+      "Ke"
+    )
+  ) {
+    if (
+      checkPlanetCorrespondenceOfPlanetInSecondChart(
+        person2BirthChart,
+        person1BirthChart,
+        "Ra"
+      ) ||
+      checkPlanetCorrespondenceOfPlanetInSecondChart(
+        person2BirthChart,
+        person1BirthChart,
+        "Ke"
+      )
+    ) {
+      // Two way connection
+      total_score += 2;
+    } else total_score += 1; // One way connection
+  } else {
+    if (
+      checkPlanetCorrespondenceOfPlanetInSecondChart(
+        person2BirthChart,
+        person1BirthChart,
+        "Ra"
+      ) ||
+      checkPlanetCorrespondenceOfPlanetInSecondChart(
+        person2BirthChart,
+        person1BirthChart,
+        "Ke"
+      )
+    ) {
+      total_score += 1; // One way connection
+    } else {
+      total_score += 0;
+    }
+  }
+  // Saturn to Saturn Connection
+  if (
+    checkPlanetCorrespondenceOfPlanetInSecondChart(
+      person1BirthChart,
+      person2BirthChart,
+      "Sa"
+    )
+  ) {
+    if (
+      checkPlanetCorrespondenceOfPlanetInSecondChart(
+        person2BirthChart,
+        person1BirthChart,
+        "Sa"
+      )
+    ) {
+      // Two way connection
+      total_score += 2;
+    } else total_score += 1; // One way connection
+  } else {
+    if (
+      checkPlanetCorrespondenceOfPlanetInSecondChart(
+        person2BirthChart,
+        person1BirthChart,
+        "Sa"
+      )
+    ) {
+      total_score += 1; // One way connection
+    } else {
+      total_score += 0; // No connection
+    }
+  }
+  // Nakshatra Compatibility (Overall)
+
+  const animalOfPerson1 = calculateNakshatra(person1BirthChart).animal;
+  const animalOfPerson2 = calculateNakshatra(person2BirthChart).animal;
+
+  total_score += calculateNakshatraCompatibility(
+    animalOfPerson1,
+    animalOfPerson2
+  );
+
+  return total_score;
+}
+
+/**
  *
  * @param {Object} chart birthChart
  * @returns {Object} key value: house: rashi
@@ -477,4 +701,5 @@ module.exports = {
   signInterference,
   planetConjunctHouse,
   checkPlanetCorrespondenceOfPlanetInSecondChart,
+  getCompatibilityScore,
 };
