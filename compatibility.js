@@ -702,4 +702,6 @@ module.exports = {
   planetConjunctHouse,
   checkPlanetCorrespondenceOfPlanetInSecondChart,
   getCompatibilityScore,
+  calculateNakshatra,
+  calculateNakshatraCompatibility,
 };
