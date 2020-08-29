@@ -1,5 +1,7 @@
 # Reha Astrology
 
+`Doesn't work in browser environments. Please run on server`
+
 ```shell
 npm i -S astroreha
 ```
