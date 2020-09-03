@@ -249,6 +249,7 @@ function getCompatibilityScore(
   person2,
   threshold = constants.DEFAULT_THRESHOLD
 ) {
+  const interim = [];
   const person1BirthChart = getBirthChart(
     person1.dateString,
     person1.timeString,
@@ -284,21 +285,32 @@ function getCompatibilityScore(
     person1BirthChart
   );
   if (D9_p2N_p1B_match) total_score++;
-
+  interim.push({ after_score: total_score, key: "Seventh House of D9" });
   if (!total_score) return false; // Navamsa Chart condition
 
   total_score += oppositeSignOfBirthCheck(person1BirthChart, person2BirthChart); // 7th House Map Match?
+  interim.push({ after_score: total_score, key: "7th House Matching?" });
 
   // Are the lords of the rising sign friends
   total_score += areFriends(
     constants.RASHI_LORDS[constants.RASHIS[person1BirthChart.meta.La.rashi]],
     constants.RASHI_LORDS[constants.RASHIS[person2BirthChart.meta.La.rashi]]
   );
+
+  interim.push({
+    after_score: total_score,
+    key: "Are Lords of Rising Sign Friends?",
+  });
   // Rising to Rising Connection
   total_score += connectionType(
     person1BirthChart.meta.La.rashi,
     person2BirthChart.meta.La.rashi
   );
+
+  interim.push({
+    after_score: total_score,
+    key: "Rising to Rising Connection",
+  });
 
   // Moon to Moon connection
 
@@ -306,31 +318,36 @@ function getCompatibilityScore(
     person1BirthChart.meta.Mo.rashi,
     person2BirthChart.meta.Mo.rashi
   );
-
+  interim.push({ after_score: total_score, key: "Moon to Moon Connection" });
   // Moon's Ruling Lords Friends
 
   total_score += areFriends(
     constants.RASHI_LORDS[constants.RASHIS[person1BirthChart.meta.Mo.rashi]],
     constants.RASHI_LORDS[constants.RASHIS[person2BirthChart.meta.Mo.rashi]]
   );
-
+  interim.push({ after_score: total_score, key: "Moon's Ruling Lord Friends" });
   // Moon conjunct or opposite sun?
 
   total_score += Number(
     person1BirthChart.meta.Mo.rashi === person2BirthChart.meta.Su.rashi ||
       person1BirthChart.meta.Su.rashi === person2BirthChart.meta.Mo.rashi
   );
+  interim.push({
+    after_score: total_score,
+    key: "Moon conjunct or opposite Sun?",
+  });
 
   // Sun to Sun connection
   total_score += connectionType(
     person1BirthChart.meta.Su.rashi,
     person2BirthChart.meta.Su.rashi
   );
+  interim.push({ after_score: total_score, key: "Sun to Sun Connection" });
 
   // Sun Illumination one (Which house does partnet's sun fall into?)
 
   total_score += signInterference(person1BirthChart, person2BirthChart, "Su");
-
+  interim.push({ after_score: total_score, key: "Sun's Illumination thing" });
   // Sun Conjunct 7th House?
 
   total_score += planetConjunctHouse(
@@ -339,38 +356,45 @@ function getCompatibilityScore(
     "Su",
     7
   );
-
+  interim.push({
+    after_score: total_score,
+    key: "Sun conjunct seventh House?",
+  });
   // Venus to Venus Connection
 
   total_score += connectionType(
     person1BirthChart.meta.Ve.rashi,
     person2BirthChart.meta.Ve.rashi
   );
-
+  interim.push({ after_score: total_score, key: "Venus to Venus connection" });
   // Are Venus Ruling Lord Friends?
 
   total_score += areFriends(
     constants.RASHI_LORDS[constants.RASHIS[person1BirthChart.meta.Ve.rashi]],
     constants.RASHI_LORDS[constants.RASHIS[person2BirthChart.meta.Ve.rashi]]
   );
+  interim.push({
+    after_score: total_score,
+    key: "Are venus ruling lord friends?",
+  });
 
   // Manglik Connection
 
   total_score += checkManglikConnection(person1BirthChart, person2BirthChart);
-
+  interim.push({ after_score: total_score, key: "Manglik Connection" });
   // Mars Ruling Lord friends?
 
   total_score += areFriends(
     constants.RASHI_LORDS[constants.RASHIS[person1BirthChart.meta.Ma.rashi]],
     constants.RASHI_LORDS[constants.RASHIS[person2BirthChart.meta.Ma.rashi]]
   );
-
+  interim.push({ after_score: total_score, key: "Mars Ruling Lord Friends?" });
   // Mars to Mars Connection
   total_score += connectionType(
     person1BirthChart.meta.Ma.rashi,
     person2BirthChart.meta.Ma.rashi
   );
-
+  interim.push({ after_score: total_score, key: "Mars to Mars Connection" });
   // Rahu to Rahu or Ketu to Ketu Connection Correspondence
   if (
     checkPlanetCorrespondenceOfPlanetInSecondChart(
@@ -448,6 +472,10 @@ function getCompatibilityScore(
       total_score += 0; // No connection
     }
   }
+  interim.push({
+    after_score: total_score,
+    key: "Rahu to Rahu / Ketu to Ketu  stuff",
+  });
   // Nakshatra Compatibility (Overall)
 
   const animalOfPerson1 = calculateNakshatra(person1BirthChart).animal;
@@ -457,8 +485,9 @@ function getCompatibilityScore(
     animalOfPerson1,
     animalOfPerson2
   );
+  interim.push({ after_score: total_score, key: "Nakshatra stuff" });
 
-  return total_score;
+  return { interim, total_score };
 }
 
 /**
