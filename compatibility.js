@@ -441,6 +441,7 @@ function getCompatibilityScore(
       total_score += 0;
     }
   }
+  interim.push({ after_score: total_score, key: "Rahu to Rahu...." });
   // Saturn to Saturn Connection
   if (
     checkPlanetCorrespondenceOfPlanetInSecondChart(
@@ -474,7 +475,7 @@ function getCompatibilityScore(
   }
   interim.push({
     after_score: total_score,
-    key: "Rahu to Rahu / Ketu to Ketu  stuff",
+    key: "Saturn to Saturn stuff",
   });
   // Nakshatra Compatibility (Overall)
 
