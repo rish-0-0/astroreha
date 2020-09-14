@@ -363,3 +363,32 @@ module.exports.BAD_CONNECTION_TYPES = [2, 4, 6, 8, 10, 12];
 module.exports.MANGLIK = [1, 4, 7, 8, 12];
 
 module.exports.swisseph = swisseph;
+
+module.exports.NAVAMSA_DIVISIONS = [
+  3.3329,
+  6.666,
+  9.999,
+  13.3329,
+  16.666,
+  19.999,
+  23.3329,
+  26.666,
+  30.0000
+];
+
+module.exports.RASHI_REVERSE_MAP = RASHI_REVERSE_MAP;
+
+module.exports.SKEWED_REVERSE_RASHI_MAP = {
+  1: "Ar",
+  2: "Ta",
+  3: "Ge",
+  4: "Cn",
+  5: "Le",
+  6: "Vi",
+  7: "Li",
+  8: "Sc",
+  9: "Sg",
+  10: "Cp",
+  11: "Aq",
+  0: "Pi",
+};

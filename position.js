@@ -1,4 +1,4 @@
-const swisseph = require('swisseph');
+const swisseph = require("swisseph");
 const { ...constants } = require("./constants");
 const ephemeris = require("ephemeris");
 const jyotish = require("jyotish");
@@ -207,23 +207,43 @@ function getNavamsaChart(birthChart) {
   };
   Object.values(birthChart).map((rashi) => {
     if (rashi.signs == undefined) {
-      // metadata
+      // metadata of birthchart should not be iterated. It won't be a rashi, it will be a graha inside metadata
       return;
     }
-    rashi.signs.map((graha) => {
-      const longitudeMod30 = graha.longitude % 30; // Remainder with 30 (Whole Sign only, as each Bhava is 30degrees)
-      const navamsa = longitudeMod30 / (10 / 3); // (30/9) as it's navamsa (9th division)
-      const navamsa_floor = Math.floor(navamsa);
-      const new_rashi = constants.rashi_calc(
-        constants.REVERSE_RASHIS[constants.NAVAMSHA_GROUPS[rashi.rashi]],
-        navamsa_floor
-      );
-      navamsaChart[constants.RASHIS[new_rashi]].signs.push(graha);
-      navamsaChart.meta[graha.graha] = { ...graha, rashi: new_rashi };
+    rashi.signs.map((graha) => {      
+      const navamsa = whichNavamsa(graha.longitude); // A number between 1 - 9
+      const navamsa_group_member =
+        constants.REVERSE_RASHIS[
+          constants.NAVAMSHA_GROUPS[rashi.rashi]
+        ];
+      const position = constants.RASHI_MAP[navamsa_group_member] + 1;
+      const calculated_navamsa_rashi_position = (position + navamsa - 1 )%12;
+      const navamsa_rashi = constants.SKEWED_REVERSE_RASHI_MAP[calculated_navamsa_rashi_position];
+      navamsaChart[constants.RASHIS[navamsa_rashi]].signs.push(graha);
+      navamsaChart.meta[graha.graha] = { ...graha, rashi: navamsa_rashi };
     });
   });
 
   return navamsaChart;
+}
+
+/**
+ *
+ * @param {Number} longitude Decimal Form of Longitude
+ * @returns {Number} 1-9
+ */
+function whichNavamsa(longitude) {
+  const fraction = longitude % 1;
+  const remainder = Math.floor(longitude) % 30;
+  const total_rem = remainder + fraction;
+  let div = 1;
+  for (var ele of constants.NAVAMSA_DIVISIONS) {
+    if (total_rem <= ele) break;
+    div++;
+  }
+
+  // the div here implies navamsa
+  return div;
 }
 
 module.exports = {
@@ -233,6 +253,7 @@ module.exports = {
   getAllPlanets,
   getBirthChart,
   getNavamsaChart,
+  whichNavamsa,
   nakshatras,
   rashis,
 };

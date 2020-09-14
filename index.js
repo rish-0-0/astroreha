@@ -51,19 +51,20 @@ if (require.main == module) {
   // const sophieNavamsaChart = getNavamsaChart(birthChart);
   // // print(sophieNavamsaChart.meta.La);
   // // print(compatibility.getHousesOfChart(sophieNavamsaChart));
-  // const birthChartRishabh = getBirthChart(
-  //   "1990-07-04",
-  //   "10:12:00",
-  //   29.7604,
-  //   -95.3698,
-  //   -5
-  // ); // Rishabh
+  const birthChart = positioner.getBirthChart(
+    "1990-07-04",
+    "10:12:00",
+    29.7604,
+    -95.3698,
+    -5
+  ); // Rishabh
   // print(birthChart.meta.La);
   // print(compatibility.getHousesOfChart(birthChart));
   // console.log(rashis.getRashi(birthChart));
   // console.log(compatibility.oppositeSignOfBirthCheck(birthChart, birthChartRishabh));
-  // print(getNavamsaChart(birthChart).meta); // Rishabh
+  print(positioner.getNavamsaChart(birthChart)); // Rishabh
   // console.log(nakshatras.calculateNakshatraCompatibility("Cat", "Hare"));
+  // console.log(positioner.whichNavamsa(30*1+12+10/60));
 }
 
 module.exports = { compatibility, positioner };
