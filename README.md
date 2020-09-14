@@ -34,6 +34,11 @@ birthChart.aries.signs // returns an array of grahas
 // Get compatibility (returns Boolean)
 astroreha.compatibility.areCompatible({dateString, timeString, lat, lng, timezone}, {dateString, timeString, lat, lng, timezone});
 ```
+## Updates for 1.1.5
+1. Changed Getting Navamsa Chart Logic to be more accurate considering floating point inaccuracies
+2. More constants available
+
+
 ## Breaking Changes
 1. Not a default Export anymore
 2. Gives Positioner and Compatibility Feature
